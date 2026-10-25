@@ -58,7 +58,7 @@ echo -e "     ${GREEN}[${BIWhite}3${GREEN}] ${NC}Auto Backup Data      "
 echo -e "     ${GREEN}[${BIWhite}4${GREEN}] ${NC}Cleaner Data      "
 echo -e "     ${GREEN}[${BIWhite}0${GREEN}] Back To Menu     "
 echo -e " "
-echo -e "     \e[1;97;101m✶ Install by Fahri Alimudin 082328013583 082328013583 ✶ ${NC} "
+echo -e "     \e[1;97;101m✶ Install by GEN SSH STORE 087821988110 082328013583 ✶ ${NC} "
 echo -e " ${PURPLE}└──────────────────────────────────────────────┘${NC}"
 echo ""
 read -p " Select menu : " opt

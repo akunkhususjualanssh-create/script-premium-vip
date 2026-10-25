@@ -79,7 +79,7 @@ echo ""
 echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
 echo ""
 echo -e " "
-echo -e "\033[0;32m Fahri Alimudin 082328013583 ${NC} "
+echo -e "\033[0;32m GEN SSH STORE 087821988110 ${NC} "
 echo -e ""
 read -n 1 -s -r -p "Press any key to back on menu"
 

@@ -1,7 +1,7 @@
 # 🚀 SCRIPT AUTO INSTALL SSH & XRAY MULTIPORT
 
 **Base Script by:** Arya Blitar  
-**Modified by:** Fahri Alimudin
+**Modified by:** GEN SSH STORE
 
 ---
 
@@ -61,7 +61,7 @@ Mohon baca sampai selesai sebelum melakukan instalasi!
 Login ke VPS Anda sebagai **root** (`sudo su`), lalu salin dan jalankan kode berikut:
 
 ```bash
-apt update -y && apt install -y wget curl ca-certificates && wget -q https://raw.githubusercontent.com/fahrialimudin/autoscript-vip/main/setup.sh && chmod +x setup.sh && ./setup.sh
+apt update -y && apt install -y wget curl ca-certificates && wget -q https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/setup.sh && chmod +x setup.sh && ./setup.sh
 ```
 
 > ✅ Kode di atas bisa langsung di-copy dengan mengklik ikon salin di pojok kanan blok kode.
@@ -71,7 +71,7 @@ apt update -y && apt install -y wget curl ca-certificates && wget -q https://raw
 ## 📱 TAMPILAN MENU
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/fahrialimudin/autoscript-vip/main/gambar/menu.jpg" alt="Tampilan Menu" width="100%"/>
+  <img src="https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/gambar/menu.jpg" alt="Tampilan Menu" width="100%"/>
 </p>
 
 ---
@@ -105,7 +105,7 @@ apt update -y && apt install -y wget curl ca-certificates && wget -q https://raw
 Jika ada pertanyaan atau butuh bantuan, hubungi saya di:
 
 - 🟢 **WhatsApp:** [https://wa.me/6282328013583](https://wa.me/6282328013583)
-- 🔵 **Telegram:** [@fahrialimudin](https://t.me/fahrialimudin)
+- 🔵 **Telegram:** [@gensshstore](https://t.me/gensshstore)
 
 ---
 
@@ -115,4 +115,4 @@ Terima kasih banyak kepada **ARYA BLITAR** atas script dasarnya yang luar biasa 
 
 Gunakan script ini dengan bijak. Dilarang keras untuk diperjualbelikan karena script ini didapatkan secara gratis.
 
-> © 2026 Fahri Alimudin - Autoscript VIP
+> © 2026 GEN SSH STORE - Autoscript VIP

@@ -46,7 +46,7 @@ EOF
 clear
 echo -e "${YELLOW}----------------------------------------------------------${NC}"
 echo -e " Autoscript VPN VIP - Ubuntu 22.04/24.04"
-echo -e " Repository : fahrialimudin/autoscript-vip"
+echo -e " Repository : akunkhususjualanssh-create/script-premium-vip"
 echo -e "${YELLOW}----------------------------------------------------------${NC}"
 
 if [ "${EUID}" -ne 0 ]; then
@@ -86,8 +86,8 @@ clear;clear;clear
 echo -e "${YELLOW}----------------------------------------------------------${NC}"
 echo -e " Dev > Script ${YELLOW}(${NC}${green} Stable Edition ${NC}${YELLOW})${NC}"
 echo -e " This Will Quick Setup VPN Server On Your Server"
-echo -e " Author : ${green}Fahri Alimudin ${NC}"
-echo -e " © Fahri Alimudin 082328013583 ${YELLOW}(${NC} 2025 ${YELLOW})${NC}"
+echo -e " Author : ${green}GEN SSH STORE ${NC}"
+echo -e " © GEN SSH STORE 087821988110 ${YELLOW}(${NC} 2025 ${YELLOW})${NC}"
 echo -e "${YELLOW}----------------------------------------------------------${NC}"
 echo ""
 sleep 2
@@ -144,7 +144,7 @@ clear
 # REPO
 # Default repository. Boleh dioverride saat install:
 # REPO="https://raw.githubusercontent.com/USER/REPO/main/" bash setup.sh
-REPO="${REPO:-https://raw.githubusercontent.com/fahrialimudin/autoscript-vip/main/}"
+REPO="${REPO:-https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 fetch_file() {
@@ -622,7 +622,7 @@ clear
 print_install "Menginstall Dropbear"
 # // Installing Dropbear
 apt-get install "${APT_ARGS[@]}" dropbear > /dev/null 2>&1
-wget -O /etc/issue.net "https://raw.githubusercontent.com/fahrialimudin/autoscript-vip/main/media/issue.net"
+wget -O /etc/issue.net "https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/media/issue.net"
 fetch_file "media/dropbear.conf" "/etc/default/dropbear"
 chmod +x /etc/default/dropbear
 /etc/init.d/dropbear restart

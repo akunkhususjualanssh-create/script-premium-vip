@@ -1,6 +1,6 @@
 [Unit]
 Description=Limit Usage Xray Service
-Documentation=https://github.com/fahrialimudin
+Documentation=https://github.com/akunkhususjualanssh-create
 After=syslog.target network-online.target
 
 [Service]

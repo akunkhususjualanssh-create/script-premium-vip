@@ -77,7 +77,7 @@ fi
 echo -e "${UK}└──────────────────────────────────────────┘${NC}"
 echo "";
 echo -e "\033[0;33m┌──────────────────────────────────────────┐\033[0m"
-echo -e " Autoscript by Fahri Alimudin 082328013583 082328013583     "
+echo -e " Autoscript by GEN SSH STORE 087821988110 082328013583     "
 echo -e "\033[0;33m└──────────────────────────────────────────┘\033[0m"
 echo ""
 read -n 1 -s -r -p "Press any key to back on menu"

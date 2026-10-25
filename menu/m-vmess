@@ -132,7 +132,7 @@ echo -e "\033[0;34m◇━━━━━━━━━━━━━━━━━◇\033
 echo -e "Berakhir Pada    : $exp"
 #echo -e "\033[0;34m◇━━━━━━━━━━━━━━━━━◇\033[0m"
 echo -e " "
-echo -e "\033[0;32m Fahri Alimudin 082328013583 ${NC}"
+echo -e "\033[0;32m GEN SSH STORE 087821988110 ${NC}"
 echo ""
 read -n 1 -s -r -p "Press any key to back on menu"
 menu
@@ -200,7 +200,7 @@ echo -e "     ${PURPLE}[${BIWhite}7${PURPLE}]${NC} Change Limit Bw User Vmess   
 echo -e "     ${PURPLE}[${BIWhite}8${PURPLE}]${NC} Change Limit Ip User Vmess     "
 echo -e "     ${PURPLE}[${BIWhite}0${PURPLE}]${NC} Back To Menu     "
 echo -e ""
-echo -e "     \e[1;97;101m✶ Install by Fahri Alimudin 082328013583 082328013583 ✶ ${PURPLE} "
+echo -e "     \e[1;97;101m✶ Install by GEN SSH STORE 087821988110 082328013583 ✶ ${PURPLE} "
 echo -e "${PURPLE}└──────────────────────────────────────────────────┘${NC}"
 echo ""
 read -p " Select menu : " opt
