@@ -221,7 +221,7 @@ print_install "Membuat direktori xray"
     curl -s ifconfig.me > /etc/xray/ipvps
     touch /etc/xray/domain
     mkdir -p /var/log/xray
-    chown www-data.www-data /var/log/xray
+    chown www-data:www-data /var/log/xray
     chmod +x /var/log/xray
     touch /var/log/xray/access.log
     touch /var/log/xray/error.log
@@ -328,20 +328,42 @@ clear
 # Fungsi input domain
 function pasang_domain() {
     clear
+    local arg_dom="${1:-${DOMAIN:-}}"
+    mkdir -p /var/lib/kyt /etc/xray
+    echo "IP=${IP}" > /var/lib/kyt/ipvps.conf
+
+    if [[ -n "$arg_dom" && "$arg_dom" == *.* ]]; then
+        host1="$arg_dom"
+        echo "$host1" > /etc/xray/domain
+        echo "$host1" > /root/domain
+        echo -e "${OK} Domain otomatis diterapkan: ${host1}"
+        return 0
+    fi
+
+    if [[ ! -t 0 ]]; then
+        # Mode background / non-interactive tanpa prompt
+        host1="${IP}.sslip.io"
+        echo "$host1" > /etc/xray/domain
+        echo "$host1" > /root/domain
+        echo -e "${OK} Mode background terdeteksi, menggunakan domain default: ${host1}"
+        return 0
+    fi
+
     echo -e "${YELLOW}----------------------------------------------------------${NC}"
     echo -e "Masukkan domain/subdomain yang sudah mengarah ke IP VPS ini."
-    echo -e "Contoh: vpn.domainanda.com"
+    echo -e "Contoh: vpn.domainanda.com (atau tekan Enter untuk pakai ${IP}.sslip.io)"
     echo -e "${YELLOW}----------------------------------------------------------${NC}"
     while true; do
         read -rp "Masukan Domain: " host1
         host1=$(echo "$host1" | tr -d '[:space:]')
-        if [[ -n "$host1" && "$host1" == *.* ]]; then
+        if [[ -z "$host1" ]]; then
+            host1="${IP}.sslip.io"
+            break
+        elif [[ "$host1" == *.* ]]; then
             break
         fi
         echo -e "${ERROR} Domain tidak valid. Gunakan format seperti vpn.domain.com"
     done
-    mkdir -p /var/lib/kyt /etc/xray
-    echo "IP=${IP}" > /var/lib/kyt/ipvps.conf
     echo "$host1" > /etc/xray/domain
     echo "$host1" > /root/domain
     echo -e "${OK} Domain disimpan: ${host1}"
@@ -432,7 +454,7 @@ function install_xray() {
 clear
     print_install "Core Xray Latest Version"
     domainSock_dir="/run/xray";! [ -d $domainSock_dir ] && mkdir  $domainSock_dir
-    chown www-data.www-data $domainSock_dir
+    chown www-data:www-data $domainSock_dir
     
     # / / Ambil Xray Core Version Terbaru
 latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
@@ -950,7 +972,7 @@ clear
     base_package
     install_speedtest_ookla
     make_folder_xray
-    pasang_domain
+    pasang_domain "$1"
     password_default
     pasang_ssl
     install_xray

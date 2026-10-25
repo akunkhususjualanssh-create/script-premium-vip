@@ -58,13 +58,38 @@ Mohon baca sampai selesai sebelum melakukan instalasi!
 
 ## 🛠️ CARA INSTALLASI (BASH SCRIPT)
 
-Login ke VPS Anda sebagai **root** (`sudo su`), lalu salin dan jalankan kode berikut:
+Login ke VPS Anda sebagai **root** (`sudo su`), lalu pilih salah satu metode instalasi di bawah ini:
 
+### 1. ⚡ Metode Standar (Foreground / Langsung)
+Gunakan metode ini jika Anda ingin memantau instalasi secara langsung di layar:
 ```bash
 apt update -y && apt install -y wget curl ca-certificates && wget -q https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/setup.sh && chmod +x setup.sh && ./setup.sh
 ```
 
-> ✅ Kode di atas bisa langsung di-copy dengan mengklik ikon salin di pojok kanan blok kode.
+---
+
+### 2. 🛡️ Metode Anti-Putus (Screen Setup Session)
+Gunakan metode ini agar proses instalasi **tidak gagal / tidak berhenti jika koneksi internet Anda terputus**:
+```bash
+apt update -y && apt install -y screen wget curl ca-certificates && screen -S setup-session -U -d -m bash -c "wget -q https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/setup.sh && chmod +x setup.sh && ./setup.sh" && screen -r setup-session
+```
+> 🔄 **Jika terminal terputus di tengah jalan, cukup sambungkan ulang dengan:**
+> ```bash
+> screen -r setup-session
+> ```
+
+---
+
+### 3. 🌙 Metode Latar Belakang Penuh (Background / Daemon)
+Instalasi berjalan di latar belakang tanpa mengunci terminal Anda. Cocok untuk instalasi cepat tanpa menunggu di layar:
+```bash
+apt update -y && apt install -y screen wget curl ca-certificates && screen -U -d -m -S install bash -c "wget -q https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/setup.sh && chmod +x setup.sh && ./setup.sh 2>&1 | tee /root/install.log"
+```
+
+> 🔍 **Cara Memantau Instalasi di Latar Belakang:**
+> * Masuk ke layar instalasi: `screen -r install`
+> * Atau lihat log live: `tail -f /root/install.log`
+> * Keluar dari screen tanpa mematikan proses: Tekan `Ctrl + A` lalu tekan `D`
 
 ---
 
