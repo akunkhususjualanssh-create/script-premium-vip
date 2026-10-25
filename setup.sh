@@ -278,7 +278,7 @@ function base_package() {
     clear
     ########
     print_install "Menginstall Packet Yang Dibutuhkan"
-    apt-get install "${APT_ARGS[@]}" zip pwgen openssl netcat-openbsd socat cron bash-completion openssh-server
+    apt-get install "${APT_ARGS[@]}" zip unzip pwgen openssl netcat-openbsd socat cron bash-completion openssh-server
     apt-get install "${APT_ARGS[@]}" figlet
     apt-get update -y
     apt-get upgrade "${APT_ARGS[@]}"
@@ -453,17 +453,26 @@ rm -rf /etc/vmess/.vmess.db
 function install_xray() {
 clear
     print_install "Core Xray Latest Version"
-    domainSock_dir="/run/xray";! [ -d $domainSock_dir ] && mkdir  $domainSock_dir
-    chown www-data:www-data $domainSock_dir
-    
-    # / / Ambil Xray Core Version Terbaru
-latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version 1.8.23
+    mkdir -p /usr/local/bin /usr/local/share/xray /var/log/xray /etc/xray /run/xray
+    domainSock_dir="/run/xray";! [ -d $domainSock_dir ] && mkdir $domainSock_dir
+    chown -R www-data:www-data $domainSock_dir /var/log/xray /etc/xray 2>/dev/null || true
+
+    # Unduh langsung biner resmi Core Xray v1.8.24 (stabil & anti rate-limit)
+    echo -e "${YELLOW}[INFO] Mengunduh biner Core Xray resmi...${NC}"
+    curl -# -L --connect-timeout 15 --retry 3 -o /tmp/xray.zip "https://github.com/XTLS/Xray-core/releases/download/v1.8.24/Xray-linux-64.zip" || wget --timeout=30 -q -O /tmp/xray.zip "https://github.com/XTLS/Xray-core/releases/download/v1.8.24/Xray-linux-64.zip"
+
+    mkdir -p /tmp/xray-bin
+    unzip -o /tmp/xray.zip -d /tmp/xray-bin >/dev/null 2>&1
+    cp -f /tmp/xray-bin/xray /usr/local/bin/xray
+    cp -f /tmp/xray-bin/geosite.dat /usr/local/share/xray/geosite.dat 2>/dev/null || true
+    cp -f /tmp/xray-bin/geoip.dat /usr/local/share/xray/geoip.dat 2>/dev/null || true
+    chmod +x /usr/local/bin/xray
+    ln -sf /usr/local/bin/xray /usr/bin/xray 2>/dev/null || true
+    rm -rf /tmp/xray.zip /tmp/xray-bin
  
     # // Ambil Config Server
     fetch_file "media/config.json" "/etc/xray/config.json" >/dev/null 2>&1
     fetch_file "media/runn.service" "/etc/systemd/system/runn.service" >/dev/null 2>&1
-    #chmod +x /usr/local/bin/xray
     domain=$(cat /etc/xray/domain)
     IPVS=$(cat /etc/xray/ipvps)
     print_success "Core Xray Latest Version"
@@ -479,10 +488,13 @@ bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release
     sed -i "s/xxx/${domain}/g" /etc/nginx/conf.d/xray.conf
     fetch_file "media/nginx.conf" "/etc/nginx/nginx.conf"
     
-cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/hap.pem
+    cat /etc/xray/xray.crt /etc/xray/xray.key | tee /etc/haproxy/hap.pem >/dev/null 2>&1
 
     # > Set Permission
-    chmod +x /etc/systemd/system/runn.service
+    chmod +x /etc/systemd/system/runn.service 2>/dev/null || true
+    touch /var/log/xray/access.log /var/log/xray/error.log
+    chmod -R 775 /var/log/xray /etc/xray /run/xray 2>/dev/null || true
+    chown -R www-data:www-data /var/log/xray /etc/xray /run/xray /usr/local/share/xray 2>/dev/null || true
 
     # > Create Service
     rm -rf /etc/systemd/system/xray.service.d
@@ -493,7 +505,7 @@ Documentation=https://github.com
 After=network.target nss-lookup.target
 
 [Service]
-User=www-data
+User=root
 CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE
 NoNewPrivileges=true
@@ -507,7 +519,8 @@ LimitNOFILE=1000000
 WantedBy=multi-user.target
 
 EOF
-print_success "Konfigurasi Packet"
+    systemctl daemon-reload
+    print_success "Konfigurasi Packet"
 }
 
 function ssh(){
