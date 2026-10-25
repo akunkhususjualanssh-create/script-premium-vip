@@ -35,24 +35,24 @@ Mohon baca sampai selesai sebelum melakukan instalasi!
 
 ## 📊 DAFTAR SERVICE & PORT LENGKAP
 
-| Nama Service                   | Port / Protokol                        |
+| Kategori / Service             | Port / Protokol                        |
 |--------------------------------|----------------------------------------|
-| 🔑 OpenSSH                     | 22, 2222, 2223                         |
-| 🛡️ Dropbear                   | 109, 143                               |
-| 🌐 SSH WS / Xray WS (HTTP)     | 80, 55, 8880, 2082                     |
-| 🔐 SSH WSS / Xray WSS (HTTPS)  | 443, 8443, 2087, 2096                  |
-| 🚀 Xray Vless WS               | 80 (None TLS) / 443 (TLS)             |
-| 🚀 Xray Vmess WS               | 80 (None TLS) / 443 (TLS)             |
-| 🚀 Xray Trojan WS              | 80 (None TLS) / 443 (TLS)             |
-| 🚀 Xray Shadowsocks WS         | 80 (None TLS) / 443 (TLS)             |
-| 🧬 Xray Vless gRPC             | 443, 8443, 2087, 2096                  |
-| 🧬 Xray Vmess gRPC             | 443, 8443, 2087, 2096                  |
-| 🧬 Xray Trojan gRPC            | 443, 8443, 2087, 2096                  |
-| 🧬 Xray Shadowsocks gRPC       | 443, 8443, 2087, 2096                  |
-| 🌍 OpenVPN TCP                 | 1194                                   |
-| 🌍 OpenVPN UDP                 | 2200                                   |
-| ⚙️ Nginx (Panel)              | 81                                     |
-| 🐢 SlowDNS                     | 5300 (UDP)                             |
+| 🔐 TLS                         | 443, 8443                              |
+| 🌐 None TLS                    | 80, 8080                               |
+| 🔀 Any                         | 2082, 2083, 8880                       |
+| 🔑 OpenSSH                     | 444, 22                                |
+| 🛡️ Dropbear                   | 90                                     |
+| 🐢 SlowDNS                     | 53, 5300                               |
+| ⚡ UDP-Custom                  | 1-65535                                |
+| 🚀 OHP + SSH                   | 9080                                   |
+| 🦑 Squid Proxy                 | 3128                                   |
+| 🎮 UDPGW                       | 7100-7600                              |
+| 🌍 OpenVPN TCP                 | 80, 1194                               |
+| 🔒 OpenVPN SSL                 | 443                                    |
+| 🚀 OpenVPN UDP                 | 25000                                  |
+| 📡 OpenVPN DNS                 | 53                                     |
+| 🚀 OHP + OVPN                  | 9088                                   |
+| ⚙️ Nginx Web                   | 81                                     |
 
 ---
 

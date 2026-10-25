@@ -120,17 +120,17 @@ Password         : $Pass
 ==========================
 IP               : $IP
 Host             : $domain
-Port OpenSSH     : 443, 80, 22
+Port OpenSSH     : 444, 22
 Port Dropbear    : 90
 Port Dropbear WS : 443, 80
 Port SSH UDP     : 1-65535
-Port SSH WS      : 80, 8080, 8880, 2082
-Port SSH SSL WS  : 443
+Port None TLS    : 80, 8080 | Any: 2082, 8880
+Port TLS         : 443, 8443 | Any: 2083
 Port SSL/TLS     : 400-900
 Port OVPN WS SSL : 443
 Port OVPN SSL    : 443
 Port OVPN TCP    : 1194
-Port OVPN UDP    : 2200
+Port OVPN UDP    : 25000
 BadVPN UDP       : 7100, 7300, 7300
 ==========================
 Aktif Selama     : $masaaktif Hari
@@ -154,16 +154,16 @@ TEXT="
 <code>==========================</code>
 <code>IP               : $IP</code>
 <code>Host             : </code> <code>$domain</code>
-<code>Port OpenSSH     : 443, 80, 22</code>
+<code>Port OpenSSH     : 444, 22</code>
 <code>Port Dropbear    : 90</code>
-<code>Port SSH WS      : 80, 8080, 8880, 2082 </code>
+<code>Port None TLS    : 80, 8080 | Any: 2082, 8880 </code>
 <code>Port SSH UDP     : 1-65535 </code>
-<code>Port SSH SSL WS  : 443</code>
+<code>Port TLS         : 443, 8443 | Any: 2083</code>
 <code>Port SSL/TLS     : 400-900</code>
 <code>Port OVPN WS SSL : 443</code>
 <code>Port OVPN SSL    : 443</code>
 <code>Port OVPN TCP    : 443, 1194</code>
-<code>Port OVPN UDP    : 2200</code>
+<code>Port OVPN UDP    : 25000</code>
 <code>BadVPN UDP       : 7100, 7300, 7300</code>
 <code>==========================</code>
 <code>Payload WSS      : </code><code>GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf]</code>
@@ -188,17 +188,17 @@ echo -e "Host             : $domain"
 echo -e "Host Slowdns     : ${NS}"
 echo -e "Pub Key          : ${PUB}"
 #echo -e "Location         : $CITY"
-echo -e "Port OpenSSH     : 443, 80, 22"
+echo -e "Port OpenSSH     : 444, 22"
 echo -e "Port DNS         : 443, 53 ,22 "
 echo -e "Port SSH UDP     : 1-65535"
 echo -e "Port Dropbear    : 90"
-echo -e "Port SSH WS      : 80, 8080, 8880, 2082"
-echo -e "Port SSH SSL WS  : 443, 8443, 2087, 2096"
+echo -e "Port None TLS    : 80, 8080 | Any: 2082, 8880"
+echo -e "Port TLS         : 443, 8443 | Any: 2083, 8443, 2087, 2096"
 echo -e "Port SSL/TLS     : 400-900"
 echo -e "Port OVPN WS SSL : 443"
 echo -e "Port OVPN SSL    : 443"
 echo -e "Port OVPN TCP    : 443, 1194"
-echo -e "Port OVPN UDP    : 2200"
+echo -e "Port OVPN UDP    : 25000"
 echo -e "BadVPN UDP       : 7100, 7300, 7300"
 echo -e "Format Hc        : $domain:80@$Login:$Pass "
 echo -e "\033[0;34m\033[0m"

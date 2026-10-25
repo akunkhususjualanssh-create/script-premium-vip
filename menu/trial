@@ -96,16 +96,16 @@ Berakhir Pada  : $pup Menit
 ===========================
 IP               : $IP
 Host             : $domain
-Port OpenSSH     : 443, 80, 22
+Port OpenSSH     : 444, 22
 Port Dropbear    : 90
 Port SSH UDP     : 1-65535
-Port SSH WS      : 80, 8080, 8880, 2082
-Port SSH SSL WS  : 443
+Port None TLS    : 80, 8080 | Any: 2082, 8880
+Port TLS         : 443, 8443 | Any: 2083
 Port SSL/TLS     : 443
 Port OVPN WS SSL : 443
 Port OVPN SSL    : 443
 Port OVPN TCP    : 1194
-Port OVPN UDP    : 2200
+Port OVPN UDP    : 25000
 BadVPN UDP       : 7100, 7300, 7300
 ===========================
 Payload WSS: GET wss://BUG.COM/ HTTP/1.1[crlf]Host: $domain[crlf]Upgrade: websocket[crlf][crlf] 
