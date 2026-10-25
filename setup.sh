@@ -386,25 +386,49 @@ clear
 function pasang_ssl() {
 clear
 print_install "Memasang SSL Pada Domain"
-    rm -rf /etc/xray/xray.key
-    rm -rf /etc/xray/xray.crt
-    domain=$(cat /root/domain)
-    STOPWEBSERVER=$(lsof -i:80 | cut -d' ' -f1 | awk 'NR==2 {print $1}')
-    rm -rf /root/.acme.sh
-    mkdir /root/.acme.sh
-    systemctl stop $STOPWEBSERVER
-    systemctl stop nginx
-    curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
-    chmod +x /root/.acme.sh/acme.sh
-    /root/.acme.sh/acme.sh --upgrade --auto-upgrade
-    /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
-    /root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
-    ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc || true
-    if [[ ! -s /etc/xray/xray.crt || ! -s /etc/xray/xray.key ]]; then
-        echo -e "${YELLOW}SSL Let's Encrypt gagal/tertunda, membuat self-signed certificate sementara.${NC}"
-        openssl req -x509 -nodes -newkey ec:<(openssl ecparam -name prime256v1) -keyout /etc/xray/xray.key -out /etc/xray/xray.crt -days 3650 -subj "/CN=$domain" >/dev/null 2>&1 || openssl req -x509 -nodes -newkey rsa:2048 -keyout /etc/xray/xray.key -out /etc/xray/xray.crt -days 3650 -subj "/CN=$domain" >/dev/null 2>&1
+    rm -rf /etc/xray/xray.key /etc/xray/xray.crt /etc/haproxy/hap.pem
+    domain=$(cat /root/domain 2>/dev/null || cat /etc/xray/domain 2>/dev/null || echo "")
+
+    # Bebaskan Port 80 dan 443 sebelum acme.sh berjalan
+    systemctl stop nginx haproxy ws 2>/dev/null || true
+    fuser -k 80/tcp 443/tcp 2>/dev/null || true
+    killall -9 haproxy nginx ws 2>/dev/null || true
+    sleep 2
+
+    mkdir -p /root/.acme.sh /etc/xray /etc/haproxy
+    if [ ! -f /root/.acme.sh/acme.sh ]; then
+        curl -s https://get.acme.sh | sh -s email=admin@${domain} >/dev/null 2>&1 || curl -s https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
+        chmod +x /root/.acme.sh/acme.sh 2>/dev/null || true
     fi
-    chmod 777 /etc/xray/xray.key
+
+    /root/.acme.sh/acme.sh --upgrade --auto-upgrade >/dev/null 2>&1 || true
+
+    # 1. Coba Let's Encrypt
+    /root/.acme.sh/acme.sh --set-default-ca --server letsencrypt >/dev/null 2>&1 || true
+    /root/.acme.sh/acme.sh --issue -d "$domain" --standalone -k ec-256 --force >/dev/null 2>&1 || true
+    /root/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc >/dev/null 2>&1 || true
+
+    # 2. Fallback ZeroSSL jika Let's Encrypt gagal
+    if [[ ! -s /etc/xray/xray.crt || ! -s /etc/xray/xray.key ]]; then
+        echo -e "  ${YELLOW}[INFO] Let's Encrypt dibatasi, mencoba CA ZeroSSL...${NC}"
+        /root/.acme.sh/acme.sh --register-account -m admin@${domain} --server zerossl >/dev/null 2>&1 || true
+        /root/.acme.sh/acme.sh --set-default-ca --server zerossl >/dev/null 2>&1 || true
+        /root/.acme.sh/acme.sh --issue -d "$domain" --standalone -k ec-256 --force >/dev/null 2>&1 || true
+        /root/.acme.sh/acme.sh --installcert -d "$domain" --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc >/dev/null 2>&1 || true
+    fi
+
+    # 3. Fallback Self-Signed jika keduanya offline (agar Xray & HAProxy tetap hidup 100%)
+    if [[ ! -s /etc/xray/xray.crt || ! -s /etc/xray/xray.key ]]; then
+        echo -e "  ${YELLOW}[WARN] ACME offline, membuat sertifikat SSL cadangan Self-Signed...${NC}"
+        openssl req -new -newkey rsa:2048 -days 3650 -nodes -x509 \
+            -subj "/C=ID/ST=Jakarta/L=Jakarta/O=GEN SSH STORE/OU=VIP/CN=${domain}" \
+            -keyout /etc/xray/xray.key -out /etc/xray/xray.crt >/dev/null 2>&1
+    fi
+
+    chmod 644 /etc/xray/xray.crt 2>/dev/null || true
+    chmod 600 /etc/xray/xray.key 2>/dev/null || true
+    cat /etc/xray/xray.crt /etc/xray/xray.key > /etc/haproxy/hap.pem 2>/dev/null || true
+    chmod 600 /etc/haproxy/hap.pem 2>/dev/null || true
     print_success "SSL Certificate"
 }
 
@@ -756,25 +780,18 @@ print_success "Swap 1 G"
 
 function ins_Fail2ban(){
 clear
-print_install "Menginstall Fail2ban"
-#apt -y install fail2ban > /dev/null 2>&1
-#sudo systemctl enable --now fail2ban
-#/etc/init.d/fail2ban restart
-#/etc/init.d/fail2ban status
+print_install "Menginstall Fail2ban Protection"
+    apt-get install "${APT_ARGS[@]}" fail2ban -y >/dev/null 2>&1 || true
+    systemctl daemon-reload >/dev/null 2>&1 || true
+    systemctl enable fail2ban >/dev/null 2>&1 || true
+    systemctl restart fail2ban >/dev/null 2>&1 || true
 
-# Instal DDOS Flate
-if [ -d '/usr/local/ddos' ]; then
-	echo; echo; echo "Please un-install the previous version first"
-	exit 0
-else
-	mkdir /usr/local/ddos
-fi
+    mkdir -p /usr/local/ddos 2>/dev/null || true
 
-clear
-# banner
-echo "Banner /etc/issue.net" >>/etc/ssh/sshd_config
-sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear
-print_success "Fail2ban Installed"
+    # Pasang Banner resmi GEN SSH STORE
+    echo "Banner /etc/issue.net" >>/etc/ssh/sshd_config
+    sed -i 's@DROPBEAR_BANNER=""@DROPBEAR_BANNER="/etc/issue.net"@g' /etc/default/dropbear 2>/dev/null || true
+print_success "Fail2ban Protection"
 }
 
 function ins_epro(){
@@ -840,6 +857,8 @@ systemctl restart haproxy || true
     systemctl enable --now haproxy
     systemctl enable --now netfilter-persistent
     systemctl enable --now ws
+    systemctl enable --now fail2ban >/dev/null 2>&1 || true
+    systemctl restart fail2ban >/dev/null 2>&1 || true
 history -c
 echo "unset HISTFILE" >> /etc/profile
 
@@ -856,9 +875,11 @@ function menu(){
     print_install "Memasang Menu Packet"
     mkdir -p /usr/local/sbin
     MENU_FILES="addhost addss addssh addtr addvless addws asu autobackup autokill autoreboot backup bw ceklim cekss cekssh cektr cekvless cekws change-color clearcache clearlog delexp delss delssh deltr delvless delws fixcert kacuk kontol limitspeed lock m-noob m-sshws m-ssws m-system m-trojan m-vless m-vmess member menu menu-backup prot renewss renewssh renewtr renewvless renewws restart restore run sdo speedtest tendang trial trialss trialtr trialvless trialws udepe unlock update-menu xp"
+    mkdir -p /usr/bin /usr/local/sbin
     for file in $MENU_FILES; do
         fetch_file "menu/$file" "/usr/local/sbin/$file" >/dev/null 2>&1
         chmod +x "/usr/local/sbin/$file"
+        ln -sf "/usr/local/sbin/$file" "/usr/bin/$file" 2>/dev/null || true
     done
     print_success "Menu Packet"
 }
@@ -998,6 +1019,7 @@ clear
     ins_openvpn
     ins_backup
     ins_swab
+    ins_Fail2ban
     ins_epro
     ins_restart
     menu
@@ -1019,7 +1041,7 @@ secs_to_human "$(($(date +%s) - ${start}))"
 hostnamectl set-hostname "$(cat /etc/xray/domain 2>/dev/null || echo autoscript-vip)" || true
 echo -e "${green} Script Successfully Installed"
 echo "Ringkasan service setelah instalasi:"
-for svc in ssh dropbear nginx haproxy xray ws cron netfilter-persistent rc-local udp-mini-1 udp-mini-2 udp-mini-3 udp-custom noobzvpns openvpn-server@server-tcp openvpn-server@server-udp; do
+for svc in ssh dropbear nginx haproxy xray ws fail2ban cron netfilter-persistent rc-local udp-mini-1 udp-mini-2 udp-mini-3 udp-custom noobzvpns openvpn-server@server-tcp openvpn-server@server-udp; do
     printf "  %-32s : " "$svc"
     systemctl is-active "$svc" 2>/dev/null || true
 done
