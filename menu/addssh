@@ -121,8 +121,8 @@ Password         : $Pass
 IP               : $IP
 Host             : $domain
 Port OpenSSH     : 443, 80, 22
-Port Dropbear    : 443, 109
-Port Dropbear WS : 443, 109
+Port Dropbear    : 2019
+Port Dropbear WS : 443, 80
 Port SSH UDP     : 1-65535
 Port SSH WS      : 80, 8080, 8880, 2082
 Port SSH SSL WS  : 443
@@ -155,7 +155,7 @@ TEXT="
 <code>IP               : $IP</code>
 <code>Host             : </code> <code>$domain</code>
 <code>Port OpenSSH     : 443, 80, 22</code>
-<code>Port Dropbear    : 443, 109</code>
+<code>Port Dropbear    : 2019</code>
 <code>Port SSH WS      : 80, 8080, 8880, 2082 </code>
 <code>Port SSH UDP     : 1-65535 </code>
 <code>Port SSH SSL WS  : 443</code>
@@ -191,7 +191,7 @@ echo -e "Pub Key          : ${PUB}"
 echo -e "Port OpenSSH     : 443, 80, 22"
 echo -e "Port DNS         : 443, 53 ,22 "
 echo -e "Port SSH UDP     : 1-65535"
-echo -e "Port Dropbear    : 443, 109"
+echo -e "Port Dropbear    : 2019"
 echo -e "Port SSH WS      : 80, 8080, 8880, 2082"
 echo -e "Port SSH SSL WS  : 443, 8443, 2087, 2096"
 echo -e "Port SSL/TLS     : 400-900"

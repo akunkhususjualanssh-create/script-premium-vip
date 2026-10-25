@@ -678,15 +678,34 @@ print_success "SSHD"
 clear
 function ins_dropbear(){
 clear
-print_install "Menginstall Dropbear"
+print_install "Menginstall Dropbear 2019"
 # // Installing Dropbear
 apt-get install "${APT_ARGS[@]}" dropbear > /dev/null 2>&1
 wget -O /etc/issue.net "https://raw.githubusercontent.com/akunkhususjualanssh-create/script-premium-vip/main/media/issue.net"
 fetch_file "media/dropbear.conf" "/etc/default/dropbear"
-chmod +x /etc/default/dropbear
-/etc/init.d/dropbear restart
-/etc/init.d/dropbear status
-print_success "Dropbear"
+chmod 644 /etc/default/dropbear
+
+# Patch biner Dropbear agar menampilkan versi 2019.78 resmi
+systemctl stop dropbear 2>/dev/null || /etc/init.d/dropbear stop 2>/dev/null || true
+python3 -c '
+import os
+for p in ["/usr/sbin/dropbear", "/usr/bin/dropbear"]:
+    if os.path.exists(p):
+        try:
+            with open(p, "rb") as f: d = f.read()
+            for o in [b"dropbear_2022.83", b"dropbear_2020.81", b"dropbear_2020.80", b"dropbear_2019.82"]:
+                if o in d:
+                    d = d.replace(o, b"dropbear_2019.78")
+                    tmp = p + ".patch"
+                    with open(tmp, "wb") as pf: pf.write(d)
+                    os.chmod(tmp, 0o755)
+                    os.replace(tmp, p)
+                    break
+        except: pass
+' 2>/dev/null || true
+
+/etc/init.d/dropbear restart 2>/dev/null || systemctl restart dropbear 2>/dev/null || true
+print_success "Dropbear 2019"
 }
 
 clear
