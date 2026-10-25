@@ -129,7 +129,7 @@ apt update -y && apt install -y screen wget curl ca-certificates && screen -U -d
 
 Jika ada pertanyaan atau butuh bantuan, hubungi saya di:
 
-- 🟢 **WhatsApp:** [https://wa.me/6282328013583](https://wa.me/6282328013583)
+- 🟢 **WhatsApp:** [https://wa.me/6287821988110](https://wa.me/6287821988110)
 - 🔵 **Telegram:** [@gensshstore](https://t.me/gensshstore)
 
 ---
